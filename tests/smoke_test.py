@@ -79,7 +79,21 @@ def main() -> int:
         print(f"[FAIL] GET /health: {exc}")
         return 1
 
-    # 2. Ingesta de telemetría
+    # 2. Dashboard: comprueba que la página de operación esté publicada.
+    try:
+        response = session.get(f"{base}/dashboard", timeout=10)
+        if not check_status("GET /dashboard", response):
+            failures += 1
+        elif "text/html" not in response.headers.get("content-type", "").lower():
+            print("[FAIL] GET /dashboard: se esperaba una respuesta HTML.")
+            failures += 1
+        else:
+            print("       Dashboard HTML recibido correctamente.")
+    except requests.RequestException as exc:
+        print(f"[FAIL] GET /dashboard: {exc}")
+        failures += 1
+
+    # 3. Ingesta de telemetría
     try:
         response = session.post(f"{base}/telemetry", json=SAMPLE, timeout=10)
         if not check_status("POST /telemetry", response):
@@ -88,7 +102,7 @@ def main() -> int:
         print(f"[FAIL] POST /telemetry: {exc}")
         failures += 1
 
-    # 3. Lista de robots
+    # 4. Lista de robots
     try:
         response = session.get(f"{base}/robots", timeout=10)
         if not check_status("GET /robots", response):
@@ -108,7 +122,7 @@ def main() -> int:
         print(f"[FAIL] GET /robots: {exc}")
         failures += 1
 
-    # 4. Historial: verifica que la muestra enviada esté persistida.
+    # 5. Historial: verifica que la muestra enviada esté persistida.
     if args.check_history:
         try:
             response = session.get(
@@ -136,7 +150,7 @@ def main() -> int:
             print(f"[FAIL] GET /robots/{SAMPLE['robot_id']}/history: {exc}")
             failures += 1
 
-    # 5. Predicción: comprueba el contrato de respuesta definido por el profesor.
+    # 6. Predicción: comprueba el contrato de respuesta definido por el profesor.
     if args.expect_predict:
         try:
             response = session.post(f"{base}/predict", json=SAMPLE, timeout=15)
@@ -181,7 +195,7 @@ def main() -> int:
             print(f"[FAIL] POST /predict: {exc}")
             failures += 1
 
-    # 6. Robustez: un campo batería fuera de rango debe producir un 4xx.
+    # 7. Robustez: un campo batería fuera de rango debe producir un 4xx.
     if args.check_invalid:
         invalid_sample = dict(SAMPLE)
         invalid_sample["robot_id"] = "TEST-INVALID"
@@ -202,7 +216,7 @@ def main() -> int:
             print(f"[FAIL] Prueba de dato inválido: {exc}")
             failures += 1
 
-    # 7. Métricas operacionales
+    # 8. Métricas operacionales
     try:
         response = session.get(f"{base}/metrics", timeout=10)
         if not check_status("GET /metrics", response):
