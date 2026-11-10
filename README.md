@@ -36,7 +36,7 @@ Dashboard / API / métricas
 - FastAPI recibe y valida la telemetría.
 - SQLAlchemy almacena los registros en PostgreSQL gestionado por Neon.
 - El modelo clasifica la condición del robot como `NORMAL`, `WARNING` o `CRITICAL`.
-- El dashboard consulta los endpoints de la API.
+- El dashboard avanzado consulta los endpoints de la API, presenta predicciones por robot, estado del servicio, métricas agregadas de flota y un histórico tipo sparkline de batería. Se actualiza automáticamente cada 3 segundos.
 
 ## Endpoints
 
@@ -214,7 +214,7 @@ Render ejecuta el servicio web; Neon proporciona la base PostgreSQL persistente.
 
 - Rama de trabajo: `feature/matias-smoke-tests`.
 - Pull Request #1: [Feature/dashboard — Agux](https://github.com/Kureyomi/aci606-cloud-fleet-challenge/pull/1).
-- Pull Request #2: [Smoke tests — XogAeternum](https://github.com/Kureyomi/aci606-cloud-fleet-challenge/pull/2).
+- Pull Request #2: [Dashboard avanzado, smoke tests y documentación — XogAeternum](https://github.com/Kureyomi/aci606-cloud-fleet-challenge/pull/2).
 
 **Estado al redactar este README:** ambos Pull Requests están abiertos y pendientes de integración en `Kureyomi/main`. La rama personal contiene los cambios de pruebas; la integración final en el repositorio del grupo requiere aprobación de alguien con permisos de escritura.
 
